@@ -9,11 +9,35 @@
 
 本项目需要 Go 1.18 或以上版本。
 
+
+输入
+
+```bash
+sudo apt install golang-go
+```
+
+安装完成后之后运行以下命令检查 Go 版本：
+
+```bash
+go version
+```
+
+
+配置 [Go 模块代理](https://goproxy.cn/) 加速 Go 模块的下载：
+
+```bash
+go env -w GO111MODULE=on
+go env -w GOPROXY=https://goproxy.cn,direct
+```
+
+### 备用方案:
+
 删除旧版本 Go：
 
 ```bash
 sudo rm -rf /usr/local/go
 ```
+
 
 下载 Go 安装包：（你可以从 [Go 官网](https://go.dev/dl/) 获取最新版本下载链接）
 
@@ -29,32 +53,19 @@ sudo tar -C /usr/local -xzf go1.20.5.linux-amd64.tar.gz
 
 将 `/usr/local/go/bin` 目录添加到 PATH 环境变量中。
 
-如果你使用的是 zsh，执行以下命令：
-
-```bash
-echo 'export PATH="$PATH:/usr/local/go/bin"' >> ~/.zshrc
-```
-
 如果你使用的是 bash，执行以下命令：
 
 ```bash
 echo 'export PATH="$PATH:/usr/local/go/bin"' >> ~/.bashrc
 ```
 
+如果你使用的是 zsh，执行以下命令：
+
+```bash
+echo 'export PATH="$PATH:/usr/local/go/bin"' >> ~/.zshrc
+```
+
 重启终端使环境变量生效。
-
-之后运行以下命令检查 Go 版本：
-
-```bash
-go version
-```
-
-配置 [Go 模块代理](https://goproxy.cn/) 加速 Go 模块的下载：
-
-```bash
-go env -w GO111MODULE=on
-go env -w GOPROXY=https://goproxy.cn,direct
-```
 
 ## 配置 VSCode 开发环境
 
