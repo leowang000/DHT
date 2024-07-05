@@ -1,0 +1,2 @@
+// RPC methods
+package rpc

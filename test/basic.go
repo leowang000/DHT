@@ -1,11 +1,19 @@
-package main
+package test
 
 import (
+	"crypto/sha1"
 	"fmt"
+	"math/big"
 	"math/rand"
 	"sync"
 	"time"
 )
+
+func getHash(ip string) *big.Int {
+	hash := sha1.Sum([]byte(ip))
+	hashInt := new(big.Int)
+	return hashInt.SetBytes(hash[:])
+}
 
 func basicTest() (bool, int, int) {
 	basicFailedCnt, basicTotalCnt, panicked := 0, 0, false
@@ -67,6 +75,12 @@ func basicTest() (bool, int, int) {
 
 		time.Sleep(basicTestAfterJoinQuitSleepTime)
 
+		// for i := 0; i <= 100; i++ {
+		// 	pred, succ := nodes[i].GetPred(), nodes[i].GetSucc()
+		// 	fmt.Printf("[%v] pred = %s, succ = %s\n", i, pred, succ)
+		// }
+		// fmt.Printf("\n")
+
 		/* Put, part 1. */
 		put1Info := testInfo{
 			msg:       fmt.Sprintf("Put (round %d, part 1)", t),
@@ -96,8 +110,10 @@ func basicTest() (bool, int, int) {
 		cyan.Printf("Start getting (round %d, part 1)\n", t)
 		get1Cnt := 0
 		for key, value := range kvMap {
-			ok, res := nodes[nodesInNetwork[rand.Intn(len(nodesInNetwork))]].Get(key)
+			tmp := nodesInNetwork[rand.Intn(len(nodesInNetwork))]
+			ok, res := nodes[tmp].Get(key)
 			if !ok || res != value {
+				//fmt.Printf("[%v] %v %s %v %s %s\n", tmp, ok, key, getHash(key), res, value)
 				get1Info.fail()
 			} else {
 				get1Info.success()
@@ -119,14 +135,15 @@ func basicTest() (bool, int, int) {
 		cyan.Printf("Start deleting (round %d, part 1)\n", t)
 		for i := 1; i <= basicTestRoundDeleteSize; i++ {
 			for key := range kvMap {
+				tmp := nodesInNetwork[rand.Intn(len(nodesInNetwork))]
 				delete(kvMap, key)
-				success := nodes[nodesInNetwork[rand.Intn(len(nodesInNetwork))]].Delete(key)
+				success := nodes[tmp].Delete(key)
 				if !success {
+					//fmt.Printf("[%v] %s %v\n", tmp, key, getHash(key))
 					delete1Info.fail()
 				} else {
 					delete1Info.success()
 				}
-
 				break
 			}
 		}
@@ -174,8 +191,10 @@ func basicTest() (bool, int, int) {
 		cyan.Printf("Start getting (round %d, part 2)\n", t)
 		get2Cnt := 0
 		for key, value := range kvMap {
-			ok, res := nodes[nodesInNetwork[rand.Intn(len(nodesInNetwork))]].Get(key)
+			tmp := nodesInNetwork[rand.Intn(len(nodesInNetwork))]
+			ok, res := nodes[tmp].Get(key)
 			if !ok || res != value {
+				//fmt.Printf("[%v] %v %s %v %s %s\n", tmp, ok, key, getHash(key), res, value)
 				get2Info.fail()
 			} else {
 				get2Info.success()
@@ -198,17 +217,24 @@ func basicTest() (bool, int, int) {
 		for i := 1; i <= basicTestRoundDeleteSize; i++ {
 			for key := range kvMap {
 				delete(kvMap, key)
-				success := nodes[nodesInNetwork[rand.Intn(len(nodesInNetwork))]].Delete(key)
+				tmp := nodesInNetwork[rand.Intn(len(nodesInNetwork))]
+				success := nodes[tmp].Delete(key)
 				if !success {
+					//fmt.Printf("[%v] %s %v\n", tmp, key, getHash(key))
 					delete2Info.fail()
 				} else {
 					delete2Info.success()
 				}
-
 				break
 			}
 		}
 		delete2Info.finish(&basicFailedCnt, &basicTotalCnt)
+
+		// for i := 0; i <= 100; i++ {
+		// 	pred, succ := nodes[i].GetPred(), nodes[i].GetSucc()
+		// 	fmt.Printf("[%v] pred = %s, succ = %s\n", i, pred, succ)
+		// }
+		// fmt.Printf("\n")
 	}
 
 	/* All nodes quit. */
