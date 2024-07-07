@@ -35,7 +35,7 @@ func forceQuitTest() (bool, int, int) {
 	}
 	time.Sleep(forceQuitAfterRunSleepTime)
 
-	/* Node 0 creates a new network. All notes join the network. */
+	/* Node 0 creates a new network. All nodes join the network. */
 	joinInfo := testInfo{
 		msg:       "Force quit join",
 		failedCnt: 0,
@@ -58,6 +58,12 @@ func forceQuitTest() (bool, int, int) {
 	joinInfo.finish(&forceQuitFailedCnt, &forceQuitTotalCnt)
 
 	time.Sleep(forceQuitAfterJoinSleepTime)
+
+	// for i := 0; i <= forceQuitNodeSize; i++ {
+	// 	pred, succ := nodes[i].GetPred(), nodes[i].GetSucc()
+	// 	fmt.Printf("[%v] pred = %s, succ = %s\n", i, pred, succ)
+	// }
+	// fmt.Printf("\n")
 
 	/* Put. */
 	putInfo := testInfo{
@@ -94,6 +100,14 @@ func forceQuitTest() (bool, int, int) {
 			time.Sleep(forceQuitFQSleepTime)
 		}
 
+		time.Sleep(time.Second)
+
+		// for i := 0; i <= forceQuitNodeSize; i++ {
+		// 	pred, succ := nodes[i].GetPred(), nodes[i].GetSucc()
+		// 	fmt.Printf("[%v] pred = %s, succ = %s\n", i, pred, succ)
+		// }
+		// fmt.Printf("\n")
+
 		/* Get all data. */
 		getInfo := testInfo{
 			msg:       fmt.Sprintf("Get (round %d)", t),
@@ -102,8 +116,10 @@ func forceQuitTest() (bool, int, int) {
 		}
 		cyan.Printf("Start getting (round %d)\n", t)
 		for key, value := range kvMap {
-			ok, res := nodes[nodesInNetwork[rand.Intn(len(nodesInNetwork))]].Get(key)
+			tmp := nodesInNetwork[rand.Intn(len(nodesInNetwork))]
+			ok, res := nodes[tmp].Get(key)
 			if !ok || res != value {
+				fmt.Printf("[%v] %v %s %v %s %s\n", tmp, ok, key, getHash(key), res, value)
 				getInfo.fail()
 			} else {
 				getInfo.success()

@@ -36,7 +36,7 @@ type dhtNode interface {
 	// Return "true" if success, "false" otherwise.
 	Delete(key string) bool
 
-	GetSucc() string
+	// GetSucc() string
 
-	GetPred() string
+	// GetPred() string
 }

@@ -75,7 +75,7 @@ func basicTest() (bool, int, int) {
 
 		time.Sleep(basicTestAfterJoinQuitSleepTime)
 
-		// for i := 0; i <= 100; i++ {
+		// for i := 0; i <= 20; i++ {
 		// 	pred, succ := nodes[i].GetPred(), nodes[i].GetSucc()
 		// 	fmt.Printf("[%v] pred = %s, succ = %s\n", i, pred, succ)
 		// }
