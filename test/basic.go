@@ -1,19 +1,11 @@
 package test
 
 import (
-	"crypto/sha1"
 	"fmt"
-	"math/big"
 	"math/rand"
 	"sync"
 	"time"
 )
-
-func getHash(ip string) *big.Int {
-	hash := sha1.Sum([]byte(ip))
-	hashInt := new(big.Int)
-	return hashInt.SetBytes(hash[:])
-}
 
 func basicTest() (bool, int, int) {
 	basicFailedCnt, basicTotalCnt, panicked := 0, 0, false
@@ -74,12 +66,6 @@ func basicTest() (bool, int, int) {
 		joinInfo.finish(&basicFailedCnt, &basicTotalCnt)
 
 		time.Sleep(basicTestAfterJoinQuitSleepTime)
-
-		// for i := 0; i <= 20; i++ {
-		// 	pred, succ := nodes[i].GetPred(), nodes[i].GetSucc()
-		// 	fmt.Printf("[%v] pred = %s, succ = %s\n", i, pred, succ)
-		// }
-		// fmt.Printf("\n")
 
 		/* Put, part 1. */
 		put1Info := testInfo{
@@ -229,12 +215,6 @@ func basicTest() (bool, int, int) {
 			}
 		}
 		delete2Info.finish(&basicFailedCnt, &basicTotalCnt)
-
-		// for i := 0; i <= 100; i++ {
-		// 	pred, succ := nodes[i].GetPred(), nodes[i].GetSucc()
-		// 	fmt.Printf("[%v] pred = %s, succ = %s\n", i, pred, succ)
-		// }
-		// fmt.Printf("\n")
 	}
 
 	/* All nodes quit. */

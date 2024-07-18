@@ -59,12 +59,6 @@ func forceQuitTest() (bool, int, int) {
 
 	time.Sleep(forceQuitAfterJoinSleepTime)
 
-	// for i := 0; i <= forceQuitNodeSize; i++ {
-	// 	pred, succ := nodes[i].GetPred(), nodes[i].GetSucc()
-	// 	fmt.Printf("[%v] pred = %s, succ = %s\n", i, pred, succ)
-	// }
-	// fmt.Printf("\n")
-
 	/* Put. */
 	putInfo := testInfo{
 		msg:       "Force quit put",
@@ -102,12 +96,6 @@ func forceQuitTest() (bool, int, int) {
 
 		time.Sleep(time.Second)
 
-		// for i := 0; i <= forceQuitNodeSize; i++ {
-		// 	pred, succ := nodes[i].GetPred(), nodes[i].GetSucc()
-		// 	fmt.Printf("[%v] pred = %s, succ = %s\n", i, pred, succ)
-		// }
-		// fmt.Printf("\n")
-
 		/* Get all data. */
 		getInfo := testInfo{
 			msg:       fmt.Sprintf("Get (round %d)", t),
@@ -119,7 +107,7 @@ func forceQuitTest() (bool, int, int) {
 			tmp := nodesInNetwork[rand.Intn(len(nodesInNetwork))]
 			ok, res := nodes[tmp].Get(key)
 			if !ok || res != value {
-				fmt.Printf("[%v] %v %s %v %s %s\n", tmp, ok, key, getHash(key), res, value)
+				//fmt.Printf("[%v] %v %s %v %s %s\n", tmp, ok, key, getHash(key), res, value)
 				getInfo.fail()
 			} else {
 				getInfo.success()
@@ -228,6 +216,7 @@ func quitAndStabilizeTest() (bool, int, int) {
 		for key, value := range kvMap {
 			ok, res := nodes[nodesInNetwork[rand.Intn(len(nodesInNetwork))]].Get(key)
 			if !ok || res != value {
+				//fmt.Println(key, value)
 				getInfo.fail()
 			} else {
 				getInfo.success()

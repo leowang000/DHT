@@ -7,18 +7,17 @@ import (
 	"math/rand"
 	"net"
 	"net/rpc"
-	"os"
 	"sync"
 	"time"
-
-	"github.com/sirupsen/logrus"
+	//"os"
+	//"github.com/sirupsen/logrus"
 )
 
 var rnd *rand.Rand
 
 func init() {
-	f, _ := os.Create("dht-test.log")
-	logrus.SetOutput(f)
+	//f, _ := os.Create("dht-test.log")
+	//logrus.SetOutput(f)
 	rnd = rand.New(rand.NewSource(time.Now().UnixNano()))
 }
 
@@ -86,20 +85,20 @@ func (node *Node) Init(addr string) {
 // Call the RPC method at addr.
 // TODO: Re-connect to the client every time can be slow. You can use connection pool to improve the performance.
 func (node *Node) remoteCall(addr string, method string, args interface{}, reply interface{}) error {
-	printLog := (method == "Node.SetBackupRPC" || method == "Node.UpdateBackupRPC" || method == "Node.GetBackupRPC" || method == "Node.AddDataRPC")
-	if printLog {
-		//logrus.Infof("[%s] RemoteCall %s %s %v", node.Addr.Addr, addr, method, args)
-	}
+	// printLog := (method == "Node.SetBackupRPC" || method == "Node.UpdateBackupRPC" || method == "Node.GetBackupRPC" || method == "Node.AddDataRPC")
+	// if printLog {
+	// 	logrus.Infof("[%s] RemoteCall %s %s %v", node.Addr.Addr, addr, method, args)
+	// }
 	conn, err := net.DialTimeout("tcp", addr, pingWaitTime)
 	if err != nil {
-		if printLog {
-			//logrus.Infof("[%s] RemoteCall %s %s %v dial fails", node.Addr.Addr, addr, method, args)
-		}
+		// if printLog {
+		// 	logrus.Infof("[%s] RemoteCall %s %s %v dial fails", node.Addr.Addr, addr, method, args)
+		// }
 		return err
 	}
-	if printLog {
-		//logrus.Infof("[%s] RemoteCall %s %s %v dial succeeds", node.Addr.Addr, addr, method, args)
-	}
+	// if printLog {
+	// 	logrus.Infof("[%s] RemoteCall %s %s %v dial succeeds", node.Addr.Addr, addr, method, args)
+	// }
 	client := rpc.NewClient(conn)
 	defer client.Close()
 	done := make(chan error, 1)
@@ -108,21 +107,21 @@ func (node *Node) remoteCall(addr string, method string, args interface{}, reply
 	}()
 	select {
 	case <-time.After(pingWaitTime):
-		if printLog {
-			//logrus.Errorf("[%s] RemoteCall %s %s %v call time out", node.Addr.Addr, addr, method, args)
-		}
+		// if printLog {
+		// 	logrus.Errorf("[%s] RemoteCall %s %s %v call time out", node.Addr.Addr, addr, method, args)
+		// }
 		return fmt.Errorf("[%s] RemoteCall %s %s %v call time out", node.Addr.Addr, addr, method, args)
 	case err = <-done:
 		if err != nil {
-			if printLog {
-				//logrus.Infof("[%s] RemoteCall %s %s %v remote call error", node.Addr.Addr, addr, method, args)
-			}
+			// if printLog {
+			// 	logrus.Infof("[%s] RemoteCall %s %s %v remote call error", node.Addr.Addr, addr, method, args)
+			// }
 			return err
 		}
 	}
-	if printLog {
-		//logrus.Infof("[%s] RemoteCall %s %s %v succeeds, reply = %v", node.Addr.Addr, addr, method, args, reply)
-	}
+	// if printLog {
+	// 	logrus.Infof("[%s] RemoteCall %s %s %v succeeds, reply = %v", node.Addr.Addr, addr, method, args, reply)
+	// }
 	return nil
 }
 func (node *Node) maintain() {
@@ -762,11 +761,3 @@ func (node *Node) ForceQuit() {
 	node.listener.Close()
 	//logrus.Infof("[%s] Force Quit ends", node.Addr.Addr)
 }
-
-// func (node *Node) GetSucc() string {
-// 	return node.succList[0].Addr
-// }
-
-// func (node *Node) GetPred() string {
-// 	return node.pred.Addr
-// }
